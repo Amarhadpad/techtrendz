@@ -9,30 +9,25 @@ RUN apt-get update && apt-get install -y \
     default-libmysqlclient-dev \
     && rm -rf /var/lib/apt/lists/*
 
-# Create a non-root user
-RUN useradd -m myuser && chown -R myuser /app
-
-# Copy and install requirements first (for better caching)
+# Copy requirements first for better caching
 COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application files
 COPY . .
 
-# Set ownership and permissions
-RUN chown -R myuser:myuser /app && \
-    chmod -R 755 /app && \
-    chmod +x app.py
-
-# Switch to non-root user
-USER myuser
+# Set permissions for the app directory and start script
+RUN chmod -R 755 /app && \
+    chmod +x /app/app.py && \
+    chmod +x /app/start.sh
 
 # Set environment variables
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
-ENV PORT=3000
+ENV PORT=8000
 
-EXPOSE 3000
+EXPOSE 8000
 
-CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app"] 
+# Use the start script
+CMD ["/app/start.sh"] 
