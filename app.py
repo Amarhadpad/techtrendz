@@ -453,6 +453,3 @@ def create_invoice():
     except mysql.connector.Error as e:
         print(f"Error: {e}")
         return jsonify({"error": "Error updating stock"}), 500
-
-if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=os.getenv('PORT', 5000))

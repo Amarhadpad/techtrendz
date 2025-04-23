@@ -9,4 +9,4 @@ COPY . .
 
 ENV PYTHONUNBUFFERED=1
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:$PORT", "app:app"] 
