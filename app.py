@@ -26,8 +26,8 @@ def get_db_connection():
 
 # Routes for the website pages
 @app.route('/')
-def home():
-    return 'Hello from Flask on Railway!'
+def index():
+    return 'Flask is running on Railway!'
 
 @app.route('/about')
 def about():
