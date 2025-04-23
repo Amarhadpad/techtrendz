@@ -1,12 +1,9 @@
-<<<<<<< HEAD
-flask==3.1.0
-mysql-connector-python==9.3.0
-reportlab==4.4.0
+Flask==2.3.3
+mysql-connector-python==8.0.33
+reportlab==4.0.4
 gunicorn==21.2.0
 python-dotenv==1.0.0
-=======
-Flask
-mysql-connector-python
-reportlab
->>>>>>> 348643e614fc56e09b272ce32799889414a8a493
+Werkzeug==2.3.7
+mysqlclient==2.2.0
+cryptography==41.0.1
 weasyprint

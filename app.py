@@ -455,5 +455,9 @@ def create_invoice():
         return jsonify({"error": "Error updating stock"}), 500
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 5000))
-    app.run(host='0.0.0.0', port=port)
+    try:
+        port = int(os.getenv('PORT', 8080))
+        app.run(host='0.0.0.0', port=port, debug=False)
+    except Exception as e:
+        print(f"Error starting the application: {e}")
+        raise
