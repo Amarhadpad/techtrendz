@@ -1,6 +1,12 @@
+<<<<<<< HEAD
 flask==3.1.0
 mysql-connector-python==9.3.0
 reportlab==4.4.0
 gunicorn==21.2.0
 python-dotenv==1.0.0
+=======
+Flask
+mysql-connector-python
+reportlab
+>>>>>>> 348643e614fc56e09b272ce32799889414a8a493
 weasyprint

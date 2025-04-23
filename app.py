@@ -15,7 +15,6 @@ load_dotenv()
 app = Flask(__name__)
 app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key_here')
 
-
 # MySQL Database connection details
 def get_db_connection():
     return mysql.connector.connect(
@@ -25,22 +24,18 @@ def get_db_connection():
         database=os.getenv('DB_NAME', 'booking_db')
     )
 
-
 # Routes for the website pages
 @app.route('/')
 def index():
     return render_template('index.html')
 
-
 @app.route('/about')
 def about():
     return render_template('about.html')
 
-
 @app.route('/services')
 def services():
     return render_template('services.html')
-
 
 @app.route('/contact')
 def contact():
@@ -48,7 +43,6 @@ def contact():
 @app.route('/tech')
 def tech():
     return render_template('admin_login.html')
-
 
 # Handling the form submission for bookings
 @app.route('/submit_booking', methods=['POST'])
@@ -82,7 +76,6 @@ def submit_booking():
         print(f"Error: {e}")
         flash('There was an error while submitting your booking. Please try again.', 'danger')
         return redirect(url_for('contact'))
-
 
 @app.route('/booking_details/<int:booking_id>', methods=['GET', 'POST'])
 def booking_details(booking_id):
@@ -138,7 +131,6 @@ def booking_details(booking_id):
         print(f"Error: {e}")
         flash('There was an error fetching the booking details. Please try again.', 'danger')
         return redirect(url_for('contact'))
-
 
 # Admin Panel Route
 @app.route('/admin')
@@ -198,7 +190,6 @@ def delete_booking(booking_id):
     except Error as e:
         print(f"Error: {e}")  # Print the actual error message
         return "There was an error deleting the booking."
-
 
 # Manage Stock
 @app.route('/manage_stock', methods=['GET', 'POST'])
@@ -299,7 +290,6 @@ def get_stock_items():
         print(f"Error: {err}")
         return []
 
-
 # Route to create a bill
 @app.route('/create_bill', methods=['GET', 'POST'])
 def create_bill():
@@ -351,8 +341,6 @@ def create_bill():
 
     # Pass bill_number to the template
     return render_template('create_bill.html', stock=stock, bill_number=bill_number)
-
-
 
 # Route to render invoice page with stock items
 @app.route('/invoice')

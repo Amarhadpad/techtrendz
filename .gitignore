@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 # Environment variables
 .env
 
@@ -37,4 +38,6 @@ ENV/
 .DS_Store
 Thumbs.db
 
+=======
+>>>>>>> 348643e614fc56e09b272ce32799889414a8a493
 .qodo
