@@ -13,21 +13,29 @@ import io
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'default-secret-key')
+app.secret_key = os.getenv('SECRET_KEY')
+
+# Database configuration
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST'),
+    'user': os.getenv('DB_USER'),
+    'password': os.getenv('DB_PASSWORD'),
+    'database': os.getenv('DB_NAME')
+}
 
 # MySQL Database connection details
 def get_db_connection():
     return mysql.connector.connect(
-        host=os.getenv('DB_HOST', 'localhost'),
-        user=os.getenv('DB_USER', 'root'),
-        password=os.getenv('DB_PASSWORD', ''),
-        database=os.getenv('DB_NAME', 'booking_db')
+        host=DB_CONFIG['host'],
+        user=DB_CONFIG['user'],
+        password=DB_CONFIG['password'],
+        database=DB_CONFIG['database']
     )
 
 # Routes for the website pages
 @app.route('/')
 def index():
-    return 'Flask is running on Railway!'
+    return 'Flask is running on Railway with database configuration!'
 
 @app.route('/about')
 def about():
