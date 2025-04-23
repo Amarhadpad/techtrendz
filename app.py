@@ -27,7 +27,7 @@ def get_db_connection():
 # Routes for the website pages
 @app.route('/')
 def index():
-    return render_template('index.html')
+    return "Hello World! Flask is running!"
 
 @app.route('/about')
 def about():
@@ -455,5 +455,5 @@ def create_invoice():
         return jsonify({"error": "Error updating stock"}), 500
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', 8080))
+    port = int(os.getenv('PORT', 10000))
     app.run(host='0.0.0.0', port=port)
