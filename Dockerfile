@@ -2,12 +2,15 @@ FROM python:3.9-slim
 
 WORKDIR /app
 
-COPY requirements.txt .
+COPY requirements.txt requirements.txt
 RUN pip install -r requirements.txt
 
 COPY . .
 
-ENV PYTHONUNBUFFERED=1
-ENV PORT=8000
+ENV PORT=8080
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
 
-CMD gunicorn --bind 0.0.0.0:8000 app:app 
+EXPOSE 8080
+
+CMD ["gunicorn", "app:app", "--bind", "0.0.0.0:8080"] 
