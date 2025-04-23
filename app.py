@@ -456,8 +456,14 @@ def create_invoice():
 
 if __name__ == '__main__':
     try:
-        port = int(os.getenv('PORT', 8080))
+        port = int(os.getenv('PORT', '3000'))
+        if port < 0 or port > 65535:
+            port = 3000
+            print(f"Invalid port {port}, using default port 3000")
         app.run(host='0.0.0.0', port=port, debug=False)
+    except ValueError as e:
+        print(f"Invalid PORT value, using default port 3000: {e}")
+        app.run(host='0.0.0.0', port=3000, debug=False)
     except Exception as e:
         print(f"Error starting the application: {e}")
         raise

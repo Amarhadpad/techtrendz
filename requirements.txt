@@ -6,4 +6,4 @@ python-dotenv==1.0.0
 Werkzeug==2.3.7
 mysqlclient==2.2.0
 cryptography==41.0.1
-weasyprint
+weasyprint==60.1

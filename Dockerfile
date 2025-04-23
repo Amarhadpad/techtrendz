@@ -31,8 +31,8 @@ USER myuser
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 ENV PYTHONUNBUFFERED=1
-ENV PORT=8080
+ENV PORT=3000
 
-EXPOSE 8080
+EXPOSE 3000
 
-CMD ["python", "app.py"] 
+CMD ["gunicorn", "--bind", "0.0.0.0:3000", "app:app"] 
