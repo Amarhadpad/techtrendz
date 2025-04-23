@@ -10,7 +10,4 @@ COPY . .
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
-EXPOSE 5000
-
-ENTRYPOINT ["python"]
-CMD ["-m", "flask", "run", "--host=0.0.0.0", "--port=5000"] 
+CMD python -m flask run --host=0.0.0.0 
