@@ -1,10 +1,13 @@
 FROM python:3.9-slim
 
-WORKDIR /code
+WORKDIR /app
 
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
 
-CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"] 
+ENV FLASK_APP=app.py
+ENV FLASK_ENV=production
+
+CMD flask run --host=0.0.0.0 
