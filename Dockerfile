@@ -1,16 +1,12 @@
-FROM python:3.9
+FROM python:3.9-slim
 
-WORKDIR /code
+WORKDIR /app
 
-COPY requirements.txt requirements.txt
+COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
 
-ENV FLASK_APP=app.py
-ENV FLASK_ENV=production
-ENV PORT=10000
+ENV PYTHONUNBUFFERED=1
 
-EXPOSE 10000
-
-CMD ["flask", "run", "--host", "0.0.0.0", "--port", "10000"] 
+CMD ["python", "-m", "flask", "run", "--host=0.0.0.0"] 
