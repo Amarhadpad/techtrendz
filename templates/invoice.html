@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Premium Tax Invoice</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        
+        body {
+            background-color: #f4f4f9;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 250px;
+            background-color: #343a40;
+            padding: 20px;
+            transition: 0.3s;
+        }
+
+        .sidebar h4 {
+            color: white;
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 600;
+        }
+
+        .sidebar a {
+            color: white;
+            padding: 15px;
+            text-decoration: none;
+            font-size: 18px;
+            display: block;
+            border-radius: 5px;
+            margin-bottom: 10px;
+            transition: 0.3s;
+        }
+
+        .sidebar a:hover {
+            background-color: #007bff;
+            padding-left: 20px;
+        }
+
+
+        .invoice-box {
+            max-width: 800px;
+            margin: auto;
+            padding: 40px;
+            border: 1px solid #e3e3e8;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            background: white;
+        }
+
+        .invoice-box h2 {
+            font-size: 28px;
+            font-weight: bold;
+            color: #333;
+        }
+
+        .invoice-box h5 {
+            font-size: 16px;
+            font-weight: 600;
+            color: #555;
+        }
+
+        .form-control {
+            border-radius: 8px;
+        }
+
+        .table-bordered {
+            border: 1px solid #e3e3e8;
+        }
+
+        .table thead th {
+            background-color: #f4f4f9;
+            color: #555;
+        }
+
+        .btn {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background-color: #5c67f2;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-primary:hover {
+            background-color: #434de1;
+        }
+
+        .btn-secondary {
+            background-color: #f4f4f9;
+            border: 1px solid #ddd;
+            color: #555;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-secondary:hover {
+            background-color: #ebebf0;
+        }
+
+        .btn-danger {
+            background-color: #ff6b6b;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .btn-danger:hover {
+            background-color: #ff4d4d;
+        }
+
+        input::placeholder, textarea::placeholder {
+            font-size: 14px;
+            color: #aaa;
+        }
+
+        .total-section input {
+            font-weight: bold;
+            background-color: #f9f9f9;
+            color: #333;
+            border: none;
+            outline: none;
+        }
+
+
+        .form-group label {
+            font-weight: 600;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+        <!-- Sidebar Navigation -->
+        <div class="sidebar">
+            <h4>Admin Panel</h4>
+            <a href="{{ url_for('admin') }}"><i class="fas fa-calendar-check"></i> Bookings</a>
+            <a href="{{ url_for('manage_stock') }}"><i class="fas fa-box"></i> Manage Stock</a>
+            <a href="{{ url_for('invoice') }}"><i class="fas fa-file-invoice"></i> Create Bill</a>
+        </div>
+    
+    <div class="container mt-5 invoice-box">
+        <h2 class="text-center">TAX INVOICE</h2>
+
+        <!-- Invoice Form -->
+        <form id="invoice-form">
+            <!-- Seller and Buyer Information -->
+            <div class="row">
+                <div class="col-md-6">
+                    <h5>Seller</h5>
+                    <input type="text" class="form-control" id="seller_name" placeholder="Seller Name" value="TechWorld Computers">
+                    <textarea class="form-control mt-2" id="seller_address" rows="3" placeholder="Seller Address">456 Tech Street, Silicon Valley, CA</textarea>
+                    <input type="text" class="form-control mt-2" id="seller_gstin" placeholder="GSTIN" value="12ABCDE1234Z9A">
+                </div>
+                <div class="col-md-6">
+                    <h5>Buyer</h5>
+                    <input type="text" class="form-control" id="buyer_name" placeholder="Buyer Name">
+                    <textarea class="form-control mt-2" id="buyer_address" rows="3" placeholder="Buyer Address"></textarea>
+                    <input type="text" class="form-control mt-2" id="buyer_gstin" placeholder="GSTIN">
+                </div>
+            </div>
+
+            <!-- Invoice Number and Date -->
+            <div class="row mt-4">
+                <div class="col-md-6">
+                    <label for="invoice_number">Invoice No:</label>
+                    <input type="text" class="form-control" id="invoice_number" value="00123">
+                </div>
+                <div class="col-md-6">
+                    <label for="invoice_date">Date:</label>
+                    <input type="date" class="form-control" id="invoice_date" value="2025-03-30">
+                </div>
+            </div>
+
+            <!-- Items Table -->
+            <h5 class="mt-4">Items</h5>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>Description</th>
+                        <th>Quantity</th>
+                        <th>Rate</th>
+                        <th>Amount</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody id="items">
+                    <!-- First item row -->
+                    <tr class="item-row">
+                        <td><input type="text" class="form-control" name="description[]" placeholder="Item Description" list="stock-list"></td>
+                        <td><input type="number" class="form-control" name="quantity[]" placeholder="Quantity"></td>
+                        <td><input type="number" class="form-control" name="rate[]" placeholder="Rate"></td>
+                        <td><input type="number" class="form-control" name="amount[]" placeholder="Amount" readonly></td>
+                        <td><button type="button" class="btn btn-danger remove-item-btn"><i class="fas fa-trash-alt"></i></button></td>
+                    </tr>
+                </tbody>
+            </table>
+            <button type="button" class="btn btn-secondary" id="add-item-btn"><i class="fas fa-plus"></i> Add Item</button>
+
+            <!-- Totals Section -->
+            <div class="row mt-4 total-section">
+                <div class="col-md-6">
+                    <label for="total_value">Total Value:</label>
+                    <input type="number" class="form-control" id="total_value" value="0" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="cgst">CGST (9%):</label>
+                    <input type="number" class="form-control" id="cgst" value="0" readonly>
+                </div>
+                <div class="col-md-3">
+                    <label for="sgst">SGST (9%):</label>
+                    <input type="number" class="form-control" id="sgst" value="0" readonly>
+                </div>
+            </div>
+
+            <!-- Grand Total -->
+            <div class="row mt-4 total-section">
+                <div class="col-md-6">
+                    <label for="grand_total">Grand Total:</label>
+                    <input type="number" class="form-control" id="grand_total" value="0" readonly>
+                </div>
+            </div>
+
+        </form>
+
+
+        <!-- Datalist for stock items suggestions -->
+        <datalist id="stock-list">
+            {% for item in stock_items %}
+                {% if item[1] > 0 %}
+                    <option value="{{ item[0] }}">{{ item[0] }} ({{ item[1] }} in stock)</option>
+                {% endif %}
+            {% endfor %}
+        </datalist>
+<!-- Add the "Create Bill" and "Download PDF" Buttons here -->
+<div class="text-center mt-5">
+    <button type="button" class="btn btn-primary" id="create-bill-btn">
+        <i class="fas fa-file-invoice"></i> Create Bill
+    </button>
+    <button type="button" class="btn btn-secondary" id="download-pdf-btn" style="display: none;">
+        <i class="fas fa-download"></i> Download PDF
+    </button>
+</div>
+
+
+<!-- Generated Bill Section -->
+<div class="container mt-5" id="generated-bill" style="display: none;">
+    <div class="card shadow-lg p-4">
+        <h2 class="text-center text-primary mb-4">TAX INVOICE</h2>
+
+        <!-- Bill Details -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5>Seller Details</h5>
+                <p id="seller-details"></p>
+            </div>
+            <div class="col-md-6">
+                <h5>Buyer Details</h5>
+                <p id="buyer-details"></p>
+            </div>
+        </div>
+
+        <!-- Invoice Number and Date -->
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <h5>Invoice No:</h5>
+                <p id="invoice-no"></p>
+            </div>
+            <div class="col-md-6">
+                <h5>Date:</h5>
+                <p id="invoice-date"></p>
+            </div>
+        </div>
+
+        <!-- Items Table -->
+        <h5>Items</h5>
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>Description</th>
+                    <th>Quantity</th>
+                    <th>Rate</th>
+                    <th>Amount</th>
+                </tr>
+            </thead>
+            <tbody id="bill-items"></tbody>
+        </table>
+
+        <!-- Total and Taxes -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h5>Total Value:</h5>
+                <p id="bill-total-value"></p>
+            </div>
+            <div class="col-md-3">
+                <h5>CGST (9%):</h5>
+                <p id="bill-cgst"></p>
+            </div>
+            <div class="col-md-3">
+                <h5>SGST (9%):</h5>
+                <p id="bill-sgst"></p>
+            </div>
+        </div>
+
+        <!-- Grand Total -->
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <h5>Grand Total:</h5>
+                <p id="bill-grand-total"></p>
+            </div>
+        </div>
+    </div>
+</div>
+
+     </div>
+     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
+
+     <script>
+         // Function to calculate row amount
+         function calculateRowAmount(row) {
+             var quantity = parseFloat(row.querySelector('input[name="quantity[]"]').value) || 0;
+             var rate = parseFloat(row.querySelector('input[name="rate[]"]').value) || 0;
+             var amount = quantity * rate;
+             row.querySelector('input[name="amount[]"]').value = amount.toFixed(2);
+             calculateTotal();
+         }
+     
+         // Function to calculate total, CGST, SGST, and grand total
+         function calculateTotal() {
+             var totalValue = 0;
+             document.querySelectorAll('.item-row').forEach(function(row) {
+                 var amount = parseFloat(row.querySelector('input[name="amount[]"]').value) || 0;
+                 totalValue += amount;
+             });
+     
+             var cgst = totalValue * 0.09;
+             var sgst = totalValue * 0.09;
+             var grandTotal = totalValue + cgst + sgst;
+     
+             document.getElementById('total_value').value = totalValue.toFixed(2);
+             document.getElementById('cgst').value = cgst.toFixed(2);
+             document.getElementById('sgst').value = sgst.toFixed(2);
+             document.getElementById('grand_total').value = grandTotal.toFixed(2);
+         }
+     
+         // Function to attach event listeners to row inputs
+         function attachCalculationEvents(row) {
+             row.querySelector('input[name="quantity[]"]').addEventListener('input', function() {
+                 calculateRowAmount(row);
+             });
+             row.querySelector('input[name="rate[]"]').addEventListener('input', function() {
+                 calculateRowAmount(row);
+             });
+         }
+     
+         // Function to add a new item row
+         document.getElementById('add-item-btn').addEventListener('click', function() {
+    var itemRow = document.createElement('tr');
+    itemRow.classList.add('item-row');
+
+    itemRow.innerHTML = `
+        <td>
+            <input type="text" class="form-control item-description" name="description[]" placeholder="Item Description" list="stock-list">
+        </td>
+        <td><input type="number" class="form-control" name="quantity[]" placeholder="Quantity"></td>
+        <td><input type="number" class="form-control" name="rate[]" placeholder="Rate"></td>
+        <td><input type="number" class="form-control" name="amount[]" placeholder="Amount" readonly></td>
+        <td><button type="button" class="btn btn-danger remove-item-btn"><i class="fas fa-trash-alt"></i></button></td>
+    `;
+
+    document.getElementById('items').appendChild(itemRow);
+
+    // Attach event to remove item row
+    itemRow.querySelector('.remove-item-btn').addEventListener('click', function() {
+        itemRow.remove();
+        calculateTotal();
+    });
+
+    attachCalculationEvents(itemRow);
+});
+
+         // Attach calculation events to existing rows on load
+         document.querySelectorAll('.item-row').forEach(attachCalculationEvents);
+     
+
+// Create Bill Event Listener
+document.getElementById('create-bill-btn').addEventListener('click', function() {
+    calculateTotal(); // Ensure totals are updated before generating the bill
+
+    var sellerName = document.getElementById('seller_name').value;
+    var sellerAddress = document.getElementById('seller_address').value;
+    var sellerGstin = document.getElementById('seller_gstin').value;
+    var buyerName = document.getElementById('buyer_name').value;
+    var buyerAddress = document.getElementById('buyer_address').value;
+    var buyerGstin = document.getElementById('buyer_gstin').value;
+    var invoiceNo = document.getElementById('invoice_number').value;
+    var invoiceDate = document.getElementById('invoice_date').value;
+
+    if (!sellerName || !buyerName || !invoiceNo || !invoiceDate) {
+        alert("Please fill in all required fields.");
+        return;
+    }
+
+    document.getElementById('seller-details').innerHTML = `<strong>${sellerName}</strong><br>${sellerAddress}<br>GSTIN: ${sellerGstin}`;
+    document.getElementById('buyer-details').innerHTML = `<strong>${buyerName}</strong><br>${buyerAddress}<br>GSTIN: ${buyerGstin}`;
+    document.getElementById('invoice-no').textContent = invoiceNo;
+    document.getElementById('invoice-date').textContent = invoiceDate;
+
+    var billItems = [];
+    var billHtml = '';
+
+    document.querySelectorAll('.item-row').forEach(function(row) {
+        var description = row.querySelector('input[name="description[]"]').value;
+        var quantity = row.querySelector('input[name="quantity[]"]').value;
+        var rate = row.querySelector('input[name="rate[]"]').value;
+        var amount = row.querySelector('input[name="amount[]"]').value;
+
+        if (!description || !quantity || !rate) return;
+
+        billItems.push({ description: description, quantity: parseInt(quantity) });
+
+        billHtml += `<tr>
+            <td>${description}</td>
+            <td>${quantity}</td>
+            <td>${rate}</td>
+            <td>${amount}</td>
+        </tr>`;
+    });
+
+    document.getElementById('bill-items').innerHTML = billHtml;
+    document.getElementById('bill-total-value').textContent = '₹' + document.getElementById('total_value').value;
+    document.getElementById('bill-cgst').textContent = '₹' + document.getElementById('cgst').value;
+    document.getElementById('bill-sgst').textContent = '₹' + document.getElementById('sgst').value;
+    document.getElementById('bill-grand-total').textContent = '₹' + document.getElementById('grand_total').value;
+
+    document.getElementById('generated-bill').style.display = 'block';
+    document.getElementById('download-pdf-btn').style.display = 'inline-block';
+
+    // 🔴 Hide "Create Bill" button after clicking
+    document.getElementById('create-bill-btn').style.display = 'none';
+
+    // 🔴 Reduce stock after the bill is created
+    fetch('/update_stock', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ items: billItems })
+    })
+    .then(response => response.json())
+    .then(data => {
+        if (data.status === "success") {
+            console.log("Stock updated successfully");
+        } else {
+            alert("Stock update failed: " + data.message);
+        }
+    })
+    .catch(error => console.error("Error:", error));
+});
+
+         // Download PDF Button Event Listener
+         document.getElementById('download-pdf-btn').addEventListener('click', function() {
+             var element = document.getElementById('generated-bill');
+             var opt = {
+                 margin: 1,
+                 filename: 'invoice.pdf',
+                 image: { type: 'jpeg', quality: 0.98 },
+                 html2canvas: { scale: 2 },
+                 jsPDF: { unit: 'in', format: 'letter', orientation: 'portrait' }
+             };
+     
+             html2pdf().from(element).set(opt).save();
+         });
+     </script>
+     
+
+
+
+
