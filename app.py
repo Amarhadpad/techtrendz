@@ -13,7 +13,7 @@ import io
 load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = os.getenv('SECRET_KEY', 'your_secret_key_here')
+app.secret_key = os.getenv('SECRET_KEY', 'default-secret-key')
 
 # MySQL Database connection details
 def get_db_connection():
@@ -455,5 +455,5 @@ def create_invoice():
         return jsonify({"error": "Error updating stock"}), 500
 
 if __name__ == '__main__':
-    port = int(os.getenv('PORT', '8000'))
+    port = int(os.getenv('PORT', 8080))
     app.run(host='0.0.0.0', port=port)
